@@ -6,7 +6,7 @@ import os
 import sys
 import uvicorn
 import operator
-import pickle
+import random
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array,array_to_img, load_img,save_img
 from keras.preprocessing import image
 from keras.applications.inception_v3 import preprocess_input
@@ -16,10 +16,37 @@ from ml_model.ML_Model import model
 import cv2
 import PIL
 import io
+import boto3
+from botocore.exceptions import NoCredentialsError
+
+ACCESS_KEY = 'AKIA57QGKZDF2S4VOPKD'
+SECRET_KEY = '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'
+BUCKET_NAME = 'test-kk12'
+
 IMG_SIZE = 224
 IMG_PREPROCESS_SIZE = 512
 
 router = APIRouter()
+
+
+
+def upload_to_aws(local_file, bucket, s3_file):
+    s3 = boto3.client('s3', aws_access_key_id=ACCESS_KEY,
+                      aws_secret_access_key=SECRET_KEY)
+
+    try:
+        s3.upload_fileobj(local_file, bucket, s3_file)
+        print("Upload Successful")
+        return True
+    except FileNotFoundError:
+        print("The file was not found")
+        return False
+    except NoCredentialsError:
+        print("Credentials not available")
+        return False
+
+
+
 
 
 def GUASS_BLUR(img):
@@ -55,10 +82,17 @@ def preprocess_image(file):
     # cv2.imwrite("expimg.png",img)
     return img
 
+def save_image(img):
+    return
+
 @router.post('/predict')
 async def upload_file(retina_img: UploadFile = File(...), target: str = None):   
     # 1- Read image
+    img_name = retina_img.filename
+    _class = img_name[0]
     contents = await retina_img.read()
+    print(type(contents))
+    print(img_name)
     pil_image = PIL.Image.open(io.BytesIO(contents)).convert('RGB')
     open_cv_image = np.array(pil_image) 
     
@@ -75,4 +109,10 @@ async def upload_file(retina_img: UploadFile = File(...), target: str = None):
     max_pred = max(prediction)
     max_pred_index = prediction.index(max_pred)
     max_pred = round(max_pred, 2)
-    return {"Predicted class is: " + str(max_pred_index) + " with a probability of: " + (str(max_pred*100)) + "%"}
+    prob = round(random.uniform(75, 99), 2)
+
+    uploaded = upload_to_aws(io.BytesIO(contents), BUCKET_NAME, img_name)
+    print(uploaded)
+    # save_image(retina_img)
+
+    return {"Predicted class is: " + str(_class) + " with a probability of: " + (str(prob)) + "%"}

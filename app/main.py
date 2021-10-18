@@ -1,7 +1,6 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import RedirectResponse
 from routers import prediction
 app = FastAPI()
 

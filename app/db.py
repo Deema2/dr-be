@@ -7,17 +7,13 @@ from marshmallow import Schema, fields, pre_load, validate
 from urllib.parse import quote
 
 
-SQLALCHEMY_DATABASE_URL = os.getenv("DB_CONN")
-
-
-SERVER= "localhost"
+SERVER= "127.0.0.1"
 DATABASE= "KKESH"
-UID= os.getenv( "DB_USER")
-PASS= os.getenv( "DB_PWD")
+UID= "kkeshu"
+PASS= "1234"
 
 
-
-engine = create_engine("mssql+pymssql://{}:{}@{}:1433/{}".format(UID,quote(PASS),SERVER,DATABASE))
+engine = create_engine("mssql+pymssql://{}:{}@{}:1433/{}".format(UID,(PASS),SERVER,DATABASE))
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base(engine) 
-ma = Marshmallow()
+# ma = Marshmallow()

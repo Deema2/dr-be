@@ -18,6 +18,9 @@ import PIL
 import io
 import boto3
 from botocore.exceptions import NoCredentialsError
+from models.Predictions import PredictionsModel
+from db import SessionLocal
+
 
 ACCESS_KEY = 'AKIA57QGKZDF2S4VOPKD'
 SECRET_KEY = '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'
@@ -25,9 +28,10 @@ BUCKET_NAME = 'test-kk12'
 
 IMG_SIZE = 224
 IMG_PREPROCESS_SIZE = 512
-
+REGION = "us-east-2"
 router = APIRouter()
 
+S3_URL = f"https://{BUCKET_NAME}.s3.{REGION}.amazonaws.com/"
 
 
 def upload_to_aws(local_file, bucket, s3_file):
@@ -35,15 +39,16 @@ def upload_to_aws(local_file, bucket, s3_file):
                       aws_secret_access_key=SECRET_KEY)
 
     try:
-        s3.upload_fileobj(local_file, bucket, s3_file)
+        print(s3.upload_fileobj(local_file, bucket, s3_file))
+        image_path = S3_URL + s3_file
         print("Upload Successful")
-        return True
+        return image_path, True
     except FileNotFoundError:
         print("The file was not found")
-        return False
+        return "", False
     except NoCredentialsError:
         print("Credentials not available")
-        return False
+        return "", False
 
 
 
@@ -86,7 +91,7 @@ def save_image(img):
     return
 
 @router.post('/predict')
-async def upload_file(retina_img: UploadFile = File(...), target: str = None):   
+async def upload_file(retina_img: UploadFile = File(...)):   
     # 1- Read image
     img_name = retina_img.filename
     _class = img_name[0]
@@ -103,6 +108,7 @@ async def upload_file(retina_img: UploadFile = File(...), target: str = None):
     img = preprocess_image(open_cv_image)
     
     # 4- Predict label if image:
+    ##TODO: Return model predict
     prediction = model.predict(img)
     prediction = list(prediction[0])
     print(prediction)
@@ -110,9 +116,18 @@ async def upload_file(retina_img: UploadFile = File(...), target: str = None):
     max_pred_index = prediction.index(max_pred)
     max_pred = round(max_pred, 2)
     prob = round(random.uniform(75, 99), 2)
-
-    uploaded = upload_to_aws(io.BytesIO(contents), BUCKET_NAME, img_name)
+    
+    path, uploaded = upload_to_aws(io.BytesIO(contents), BUCKET_NAME, img_name)
+    ##TODO: Return AWS error msg
     print(uploaded)
-    # save_image(retina_img)
-
-    return {"Predicted class is: " + str(_class) + " with a probability of: " + (str(prob)) + "%"}
+    print(path)
+    print(max_pred)
+    print(prob)
+    pred = PredictionsModel(path, prob)
+    db = SessionLocal()
+    db.add(pred)
+    db.commit()
+    _class = 1
+    ##TODO: Update message returned
+    return {"Probability:": (str(prob)) + "%", "Class:": str(_class)}
+    # return {"Predicted class is: " + str(_class) + " with a probability of: " + (str(prob)) + "%"}

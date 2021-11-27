@@ -1,1 +1,1 @@
-web: uvicorn -w 3 -k uvicorn.workers.UvicornWorker app.main:app --host=0.0.0.0 --port=${PORT:-5000}
+web: uvicorn app.main:app --workers 3 --host 0.0.0.0 --port 8008

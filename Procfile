@@ -1,1 +1,1 @@
-web: gunicorn -w 3 -k uvicorn.workers.UvicornWorker slack:app
+web: uvicorn -w 3 -k uvicorn.workers.UvicornWorker app.main:app --host=0.0.0.0 --port=${PORT:-5000}

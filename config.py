@@ -16,6 +16,6 @@ class Settings(BaseSettings):
     """
     ML Model:
     """
-
-    MODEL_NAME: str = os.getenv("MODEL_NAME", "resnet_model")
+    MODEL_NAME: str = os.getenv("MODEL_NAME", "efficientnet_model")
+    # MODEL_NAME: str = os.getenv("MODEL_NAME", "resnet_model")
 

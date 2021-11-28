@@ -14,14 +14,21 @@ from keras.preprocessing import image
 from keras.applications.inception_v3 import preprocess_input
 pd.set_option('display.max_columns', None)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from .ml_model.ML_Model import model
+# from .ml_model.ML_Model import model
 import cv2
 import PIL
 import io
 import boto3
 from botocore.exceptions import NoCredentialsError
+import keras
+# model = keras.models.load_model("efficientnet_model")
 # from ..models.Predictions import PredictionsModel
 # from ..db import SessionLocal
+
+from pathlib import Path
+parent_dir = Path(__file__).parents[0]
+model = keras.models.load_model(os.path.join(parent_dir, "efficientnet_model"))
+
 
 app = FastAPI()
 

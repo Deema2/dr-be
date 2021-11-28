@@ -1,5 +1,5 @@
 
-from db import Base, SessionLocal
+from ..db import Base, SessionLocal
 from sqlalchemy import PrimaryKeyConstraint
 
 class PredictionsModel(Base):

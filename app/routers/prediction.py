@@ -18,8 +18,8 @@ import PIL
 import io
 import boto3
 from botocore.exceptions import NoCredentialsError
-from models.Predictions import PredictionsModel
-from db import SessionLocal
+from ..models.Predictions import PredictionsModel
+from ..db import SessionLocal
 
 
 ACCESS_KEY = 'AKIA57QGKZDF2S4VOPKD'

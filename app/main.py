@@ -21,13 +21,14 @@ import io
 import boto3
 from botocore.exceptions import NoCredentialsError
 import keras
+import tensorflow_text
 # model = keras.models.load_model("efficientnet_model")
 # from ..models.Predictions import PredictionsModel
 # from ..db import SessionLocal
 
 from pathlib import Path
 parent_dir = Path(__file__).parents[0]
-model = keras.models.load_model(os.path.join(parent_dir, "efficientnet_model"))
+model = keras.models.load_model(os.path.join("app/ml_model","efficientnet_model"))
 
 
 app = FastAPI()

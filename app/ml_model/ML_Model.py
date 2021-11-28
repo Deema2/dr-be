@@ -12,4 +12,5 @@ parent_dir = Path(__file__).parents[0]
 model_name = settings.MODEL_NAME
 print("Model name: ", model_name)
 model = keras.models.load_model(os.path.join(parent_dir, model_name))
+print(os.path.join(parent_dir, model_name)+"---------------------------------------------")
 # model = keras.models.load_model(os.path.join(parent_dir, 'resnet_model'))

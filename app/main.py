@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routers import prediction
 app = FastAPI()
 from .db import engine
-from app.models.Predictions import PredictionsModel
+from .models.Predictions import PredictionsModel
 
 app.add_middleware(
     CORSMiddleware,
@@ -14,9 +14,9 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-app.include_router(prediction.router)
+# app.include_router(prediction.router)
 
 @app.get("/hello")
 def main():
-    print(PredictionsModel.find_by_id(1))
+    # print(PredictionsModel.find_by_id(1))
     return "Hello World! This is the model's BE"

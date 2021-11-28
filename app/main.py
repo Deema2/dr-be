@@ -14,7 +14,7 @@ from keras.preprocessing import image
 from keras.applications.inception_v3 import preprocess_input
 pd.set_option('display.max_columns', None)
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-from ml_model.ML_Model import model
+from .ml_model.ML_Model import model
 import cv2
 import PIL
 import io

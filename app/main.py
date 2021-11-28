@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import prediction
+from .routers import prediction
 app = FastAPI()
 from .db import engine
 from .models.Predictions import PredictionsModel

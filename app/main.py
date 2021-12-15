@@ -9,6 +9,7 @@ import io
 import os
 import sys
 import random
+import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator, array_to_img, img_to_array,array_to_img, load_img,save_img
 from keras.preprocessing import image
 from keras.applications.inception_v3 import preprocess_input
@@ -28,7 +29,7 @@ import tensorflow_text
 
 from pathlib import Path
 parent_dir = Path(__file__).parents[0]
-model = keras.models.load_model(os.path.join("app/ml_model","efficientnet_model"))
+model = tf.keras.models.load_model("efficientnet_model")
 
 
 app = FastAPI()

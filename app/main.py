@@ -29,7 +29,7 @@ import tensorflow_text
 
 from pathlib import Path
 parent_dir = Path(__file__).parents[0]
-model = tf.keras.models.load_model("efficientnet_model")
+model = tf.keras.models.load_model("efficientnet_model", compile = False)
 
 
 app = FastAPI()
